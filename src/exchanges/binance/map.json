@@ -1,0 +1,10 @@
+{
+  "pair": "s",
+  "price": "c",
+  "daily": "p",
+  "dailyPerc": "P",
+  "low": "l",
+  "high": "h",
+  "volume": "v",
+  "time": "E"
+}

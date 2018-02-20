@@ -1,0 +1,9 @@
+{
+  "pair": "pair",
+  "price": "last",
+  "daily": "change",
+  "low": "low",
+  "high": "high",
+  "volume": "vol",
+  "time": "timestamp"
+}

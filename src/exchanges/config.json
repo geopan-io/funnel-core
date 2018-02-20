@@ -1,0 +1,23 @@
+{
+  "Binance": {
+    "uri": "wss://stream.binance.com:9443/ws/"
+  },
+  "Bitfinex": {
+    "uri": "wss://api.bitfinex.com/ws/2"
+  },
+  "Bitstamp": {
+    "uri": ""
+  },
+  "Bittrex": {
+    "uri": "wss://socket.bittrex.com"
+  },
+  "GDAX": {
+    "uri": "wss://ws-feed.gdax.com"
+  },
+  "Huobi": {
+    "uri": "wss://api.huobi.pro/ws"
+  },
+  "OKEx": {
+    "uri": "wss://real.okex.com:10440/websocket/okexapi"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "pair": "product_id",
+  "price": "price",
+  "low": "low_24h",
+  "high": "high_24h",
+  "volume": "volume_24h",
+  "time": "E"
+}

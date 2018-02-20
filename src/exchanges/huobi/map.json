@@ -1,0 +1,10 @@
+{
+  "pair": "pair",
+  "price": "last_price",
+  "daily": "daily_change",
+  "dailyPerc": "daily_change_perc",
+  "low": "low",
+  "high": "high",
+  "volume": "volume",
+  "time": "time"
+}
