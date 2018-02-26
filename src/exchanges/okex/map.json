@@ -1,6 +1,6 @@
 {
-  "pair": "pair",
   "price": "last",
+  "symbol": "symbol",
   "daily": "change",
   "low": "low",
   "high": "high",

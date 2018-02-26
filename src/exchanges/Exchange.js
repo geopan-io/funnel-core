@@ -1,25 +1,31 @@
 const Model = require('./Model');
+const Joi = require('joi');
+const schema = require('./ticker');
+const pino = require('pino');
 const { Client } = require('faye-websocket');
 const _ = require('lodash');
-// const Ticker = require('./Ticker');
 const ccxt = require('ccxt');
 
 module.exports = name =>
   class Exchange extends ccxt[name] {
-    constructor({ from = 'BTC', to = 'USD', ...options }) {
+    constructor({ uri, ...options }) {
       super();
-      this.from = from;
-      this.to = to;
-      this.urls.ws = options.uri;
+      this.urls.ws = uri;
       this.sub = options.sub;
       this.socket = options.socket;
       this.datastore = options.datastore;
       this.model = new Model(options.map, this.name);
+      this.logger = options.logger || pino();
     }
 
     mapping(data) {
       const result = this.model.convert(data);
-      result.symbol = this.marketsById[result.pair].symbol;
+      if (!result.symbol) {
+        result.symbol = this.marketsById[result.pair].symbol;
+      }
+      if (!result.pair) {
+        result.pair = this.marketId(result.symbol);
+      }
       return result;
     }
 
@@ -33,12 +39,12 @@ module.exports = name =>
       });
 
       this.ws.on('error', (err) => {
-        console.error(err.message);
+        this.logger.error(err);
         throw err;
       });
 
       this.ws.on('open', () => {
-        console.info(`${this.name} exchange socket open for symbol ${symbol}`);
+        this.logger.info(`${this.name} exchange socket open for symbol ${symbol}`);
         if (!_.isEmpty(this.sub)) {
           this.subscribe();
         }
@@ -53,7 +59,9 @@ module.exports = name =>
       // const ticker = new Ticker(this.mapping(data));
       const key = this.datastore.key('Tick');
       const tick = this.mapping(data);
-      const message = JSON.stringify(tick);
+      const { error, value } = Joi.validate(tick, schema);
+      if (error) this.logger.error(error);
+      const message = JSON.stringify(value);
       const { market, pair } = message;
       if (this.socket) {
         // emit to message to multiple room at once.
@@ -65,8 +73,10 @@ module.exports = name =>
         });
       }
       // console.dir(this.datastore);
-      await this.datastore.save({ key, data: tick });
-      console.log('save', key);
-      // ticker.save();
+      await this.datastore.save({
+        key,
+        data: value,
+      });
+      this.logger.trace(value);
     }
   };

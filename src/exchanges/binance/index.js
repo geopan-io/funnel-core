@@ -11,9 +11,9 @@ module.exports = class Binance extends Exchange {
   }
 
   listen(symbol) {
-    const pair = this.marketId(symbol);
+    const pair = this.marketId(symbol).toLowerCase();
     const uri = `${this.urls.ws}${pair}@ticker`;
     super.listen(symbol, uri);
-    this.ws.on('message', async ({ data }) => this.process(JSON.parse(data)));
+    this.ws.on('message', async ({ data }) => this.process({ ...JSON.parse(data), symbol }));
   }
 };

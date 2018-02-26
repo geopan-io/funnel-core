@@ -16,6 +16,7 @@ module.exports = class OKEX extends Exchange {
   // gas_btc qtum_usdt hsr_usdt neo_usdt gas_usdt
 
   listen(symbol) {
+    this.logger.debug(this.marketId(symbol));
     const pair = this.marketId(symbol);
     this.channel = `ok_sub_spot_${pair.toLowerCase()}_ticker`;
     this.sub = JSON.stringify({
@@ -27,7 +28,7 @@ module.exports = class OKEX extends Exchange {
       const [response] = JSON.parse(json);
       const { channel, data } = response;
       if (channel === this.channel) {
-        await this.process(data);
+        await this.process({ ...data, symbol });
       }
     });
   }

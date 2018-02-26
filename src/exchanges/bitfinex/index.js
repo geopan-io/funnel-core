@@ -56,7 +56,9 @@ module.exports = class Bitfinex extends Exchange {
       } else {
         const channel = this.channels[json[0]];
         if (json[1] !== 'hb') {
-          await this.process({ ...channel, time, ...parseTicker(json[1]) });
+          await this.process({
+            ...channel, time, ...parseTicker(json[1]), symbol,
+          });
         }
       }
     });
