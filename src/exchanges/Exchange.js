@@ -34,7 +34,7 @@ module.exports = name =>
       this.channels = {};
 
       this.ws.on('close', () => {
-        // console.info(`${this.name} exchange socket for symbol ${symbol} close`);
+        this.logger.info(`${this.name} channel for symbol ${symbol} close`);
         this.listen(symbol, uri);
       });
 
@@ -44,7 +44,7 @@ module.exports = name =>
       });
 
       this.ws.on('open', () => {
-        this.logger.info(`${this.name} exchange socket open for symbol ${symbol}`);
+        this.logger.info(`${this.name} channel for symbol ${symbol} open`);
         if (!_.isEmpty(this.sub)) {
           this.subscribe();
         }

@@ -19,7 +19,7 @@ module.exports = class GDAX extends Exchange {
     this.ws.on('message', async ({ data: json }) => {
       const data = JSON.parse(json);
       if (data.type === 'ticker') {
-        await this.process(data);
+        await this.process({ ...data, symbol });
       }
     });
   }
