@@ -1,7 +1,6 @@
+const express = require('express');
 const pino = require('pino');
-const Datastore = require('@google-cloud/datastore');
 const io = require('socket.io');
-const exchanges = require('./src');
 
 const logger = pino({
   name: 'funnel-core',
@@ -10,13 +9,16 @@ const logger = pino({
   prettyPrint: true,
 });
 
-// Your Google Cloud Platform project ID
-const projectId = process.env.GOOGLE_CLOUD_PROJECT;
-const datastore = new Datastore({
-  projectId,
-});
-const port = process.env.PORT || '8080';
-const socket = io(port);
+const exchanges = require('./src');
+
+const PORT = process.env.PORT || '8080';
+
+const app = express();
+const server = require('http').Server(app);
+
+app.get('/', (req, res) => res.send(`Funnel Core listening on port ${PORT}`));
+
+const socket = io(server);
 
 // handle incoming connections from clients
 socket.on('connection', (s) => {
@@ -31,7 +33,7 @@ const listSymbols = ['ETH/BTC', 'IOTA/BTCSA'];
 Object.values(exchanges).forEach(async (Ex) => {
   const exch = new Ex({
     socket,
-    datastore,
+    // datastore,
     logger,
   });
   try {
@@ -44,4 +46,8 @@ Object.values(exchanges).forEach(async (Ex) => {
   } catch (err) {
     logger.error(err);
   }
+});
+
+server.listen(PORT, () => {
+  logger.info(`funnel-core listening on port ${PORT}`);
 });

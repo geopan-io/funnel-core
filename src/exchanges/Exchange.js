@@ -1,6 +1,6 @@
 const Model = require('./Model');
 const Joi = require('joi');
-const schema = require('./ticker');
+const schema = require('./Ticker');
 const pino = require('pino');
 const { Client } = require('faye-websocket');
 const _ = require('lodash');
@@ -57,7 +57,7 @@ module.exports = name =>
 
     async process(data) {
       // const ticker = new Ticker(this.mapping(data));
-      const key = this.datastore.key('Tick');
+      // const key = this.datastore.key('Tick');
       const tick = this.mapping(data);
       const { error, value } = Joi.validate(tick, schema);
       if (error) this.logger.error(error);
@@ -73,10 +73,10 @@ module.exports = name =>
         });
       }
       // console.dir(this.datastore);
-      await this.datastore.save({
-        key,
-        data: value,
-      });
+      // await this.datastore.save({
+      //   key,
+      //   data: value,
+      // });
       this.logger.trace(value);
     }
   };
